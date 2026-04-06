@@ -7,6 +7,7 @@ import { useAuth } from "../../context/AuthContext";
 import Modal from "../../components/common/Modal";
 import Badge from "../../components/common/Badge";
 import Loader from "../../components/common/Loader";
+import { getAssetUrl } from "../../utils/url.utils";
 import toast from "react-hot-toast";
 
 const PRI_COLOR = { High: "danger", Medium: "warning", Low: "success" };
@@ -118,7 +119,7 @@ const TasksPage = () => {
               </div>
 
               {task.completionPhoto && (
-                <img src={`http://localhost:5000${task.completionPhoto}`} alt="completion" style={{ width: "100%", height: "80px", objectFit: "cover", borderRadius: "6px", marginTop: "8px" }} />
+                <img src={getAssetUrl(task.completionPhoto)} alt="completion" style={{ width: "100%", height: "80px", objectFit: "cover", borderRadius: "6px", marginTop: "8px" }} />
               )}
 
               {/* Actions */}

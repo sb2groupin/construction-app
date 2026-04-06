@@ -6,6 +6,7 @@ import Badge from "../../components/common/Badge";
 import Loader from "../../components/common/Loader";
 import FlaggedAttendance from "./FlaggedAttendance";
 import AttendanceCalendar from "../../components/common/AttendanceCalendar";
+import { getAssetUrl } from "../../utils/url.utils";
 import toast from "react-hot-toast";
 
 const Attendance = () => {
@@ -173,7 +174,7 @@ const Attendance = () => {
                   <td style={{ fontSize: "12px" }}>{r.checkInTime  ? new Date(r.checkInTime).toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"}) : "—"}</td>
                   <td style={{ fontSize: "12px" }}>{r.checkOutTime ? new Date(r.checkOutTime).toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"}) : "—"}</td>
                   <td style={{ fontSize: "12px" }}>{r.workingHours ? `${r.workingHours}h` : "—"}</td>
-                  <td>{r.selfiePhoto ? <img src={`http://localhost:5000${r.selfiePhoto}`} alt="s" style={{ width: "32px", height: "32px", borderRadius: "50%", objectFit: "cover" }} /> : "—"}</td>
+                  <td>{r.selfiePhoto ? <img src={getAssetUrl(r.selfiePhoto)} alt="s" style={{ width: "32px", height: "32px", borderRadius: "50%", objectFit: "cover" }} /> : "—"}</td>
                 </tr>
               ))}</tbody>
             </table></div>

@@ -14,12 +14,16 @@ cp .env.example .env
 ```
 Ab `.env` file kholo aur apni values daalo:
 ```
-PORT=5000
-MONGO_URI=mongodb://127.0.0.1:27017/constructionDB
+PORT=5001
+MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/constructionAppDB?retryWrites=true&w=majority
 JWT_SECRET=koi_bhi_strong_secret_min_32_chars_likho
 NODE_ENV=development
 FRONTEND_URL=http://localhost:3000
 ```
+
+Cloud deploy note:
+- Render par `.env` file automatically use nahi hoti.
+- `MONGO_URI` ya `MONGODB_URI` ko Render dashboard ke Environment section me add karna zaroori hai.
 
 ### 3. Admin account banao (sirf ek baar)
 ```bash
@@ -39,7 +43,7 @@ npm run dev
 npm start
 ```
 
-Server `http://localhost:5000` pe chalega.
+Server `http://localhost:5001` pe chalega.
 
 ---
 

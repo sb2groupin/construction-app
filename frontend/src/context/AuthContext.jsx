@@ -91,11 +91,20 @@ export const AuthProvider = ({ children }) => {
           if (active) setUser(hydratedUser);
         }
 
-        const res = await settingsAPI.get();
-        const companyData = res.data.settings || res.data;
-        if (active) setCompany(companyData);
+        // Only fetch company settings if we have a token (to avoid 401 → refresh → hard reload loop)
+        const token = localStorage.getItem("token");
+        if (token) {
+          try {
+            const res = await settingsAPI.get();
+            const companyData = res.data.settings || res.data;
+            if (active) setCompany(companyData);
+          } catch {
+            // Settings fetch failed - not critical, continue without company data
+            if (active) setCompany(null);
+          }
+        }
       } catch {
-        if (active) setCompany(null);
+        // Ignore init errors - user stays null, will be redirected to login
       } finally {
         if (active) setLoading(false);
       }
@@ -132,6 +141,16 @@ export const AuthProvider = ({ children }) => {
       : baseUser;
 
     setUser(nextUser);
+
+    // Fetch company settings after login
+    try {
+      const res = await settingsAPI.get();
+      const companyData = res.data.settings || res.data;
+      setCompany(companyData);
+    } catch {
+      // Not critical
+    }
+
     return role;
   };
 
@@ -144,6 +163,7 @@ export const AuthProvider = ({ children }) => {
 
     localStorage.clear();
     setUser(null);
+    setCompany(null);
   };
 
   const updateProfile = (updates) => {

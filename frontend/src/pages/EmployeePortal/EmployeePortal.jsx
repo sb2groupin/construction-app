@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { attendanceAPI } from "../../api/attendance.api";
 import { salaryAPI } from "../../api/salary.api";
@@ -173,9 +174,9 @@ export const MyDashboard = () => {
                 </div>
               </div>
             </div>
-            <a href="/my-attendance" className="btn btn-primary-outline btn-sm" style={{ width: "100%" }}>
+            <Link to="/my-attendance" className="btn btn-primary-outline btn-sm" style={{ width: "100%" }}>
               {t('details')}
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -207,9 +208,9 @@ export const MyDashboard = () => {
                 ₹{stats.salary.toLocaleString("en-IN")}
               </div>
             </div>
-            <a href="/my-salary" className="btn btn-primary-outline btn-sm" style={{ width: "100%" }}>
+            <Link to="/my-salary" className="btn btn-primary-outline btn-sm" style={{ width: "100%" }}>
               {t('salaryDetails')}
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -227,9 +228,9 @@ export const MyDashboard = () => {
             <p style={{ fontSize: "13px", color: "var(--text-secondary)", marginBottom: "12px" }}>
               {t('checkYourBalance')}
             </p>
-            <a href="/my-leaves" className="btn btn-primary-outline btn-sm" style={{ width: "100%" }}>
+            <Link to="/my-leaves" className="btn btn-primary-outline btn-sm" style={{ width: "100%" }}>
               {t('request')}
-            </a>
+            </Link>
           </div>
         </div>
       </div>

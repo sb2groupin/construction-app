@@ -6,6 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 import Modal from "../../components/common/Modal";
 import Badge from "../../components/common/Badge";
 import Loader from "../../components/common/Loader";
+import { getAssetUrl } from "../../utils/url.utils";
 import toast from "react-hot-toast";
 
 const CATEGORIES = ["Labour","Material","Food","Transport","Tool","Misc"];
@@ -146,7 +147,7 @@ const ExpensesPage = () => {
                       <td style={{ fontWeight: 700, color: "var(--danger)" }}>₹{e.amount.toLocaleString("en-IN")}</td>
                       <td style={{ fontSize: "13px" }}>{e.submittedBy}</td>
                       <td style={{ fontSize: "13px", maxWidth: "180px", color: "var(--gray-600)" }}>{e.description}</td>
-                      <td>{e.billPhoto ? <a href={`http://localhost:5000${e.billPhoto}`} target="_blank" rel="noreferrer" style={{ fontSize: "12px", color: "var(--primary)" }}>View</a> : "—"}</td>
+                      <td>{e.billPhoto ? <a href={getAssetUrl(e.billPhoto)} target="_blank" rel="noreferrer" style={{ fontSize: "12px", color: "var(--primary)" }}>View</a> : "—"}</td>
                       <td>
                         <Badge type={STATUS_COLOR[e.status]}>{e.status}</Badge>
                         {e.adminNote && <div style={{ fontSize: "11px", color: "var(--gray-400)", marginTop: "2px" }}>{e.adminNote}</div>}

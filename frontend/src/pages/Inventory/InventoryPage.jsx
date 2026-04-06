@@ -5,6 +5,7 @@ import { projectAPI } from "../../api/project.api";
 import Modal from "../../components/common/Modal";
 import Badge from "../../components/common/Badge";
 import Loader from "../../components/common/Loader";
+import { getAssetUrl } from "../../utils/url.utils";
 import toast from "react-hot-toast";
 
 const TABS = ["stock", "transactions", "requests"];
@@ -182,7 +183,7 @@ const InventoryPage = () => {
                       <td style={{ fontWeight: 600 }}>{txn.quantity}</td>
                       <td style={{ fontSize: "13px" }}>{txn.recordedBy}</td>
                       <td style={{ fontSize: "12px", color: "var(--gray-400)" }}>{txn.notes || "—"}</td>
-                      <td>{txn.billPhoto ? <a href={`http://localhost:5000${txn.billPhoto}`} target="_blank" rel="noreferrer" style={{ fontSize: "12px", color: "var(--primary)" }}>{t("viewLink")}</a> : "—"}</td>
+                      <td>{txn.billPhoto ? <a href={getAssetUrl(txn.billPhoto)} target="_blank" rel="noreferrer" style={{ fontSize: "12px", color: "var(--primary)" }}>{t("viewLink")}</a> : "—"}</td>
                     </tr>
                   ))}
                 </tbody>

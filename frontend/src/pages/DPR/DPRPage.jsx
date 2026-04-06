@@ -6,6 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 import Badge from "../../components/common/Badge";
 import Loader from "../../components/common/Loader";
 import Modal from "../../components/common/Modal";
+import { getAssetUrl } from "../../utils/url.utils";
 import toast from "react-hot-toast";
 
 const WEATHER_EMOJI = { Sunny:"☀️", Cloudy:"🌥️", Rain:"🌧️", "Extreme Heat":"🔥", Foggy:"🌫️" };
@@ -139,9 +140,9 @@ const DPRPage = () => {
               {dpr.photos?.length > 0 && (
                 <div style={{ display: "flex", gap: "8px", marginTop: "12px", flexWrap: "wrap" }}>
                   {dpr.photos.map((p, i) => (
-                    <img key={i} src={`http://localhost:5000${p}`} alt={`site ${i+1}`}
+                    <img key={i} src={getAssetUrl(p)} alt={`site ${i+1}`}
                       style={{ width: "90px", height: "70px", objectFit: "cover", borderRadius: "6px", cursor: "pointer" }}
-                      onClick={() => window.open(`http://localhost:5000${p}`, "_blank")}
+                      onClick={() => window.open(getAssetUrl(p), "_blank")}
                     />
                   ))}
                 </div>

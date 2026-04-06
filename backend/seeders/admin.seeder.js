@@ -1,12 +1,14 @@
-// Admin seeder — ek baar run karo: npm run seed
-// Pehle .env file mein MONGO_URI set karo
-require("dotenv").config({ path: "../.env" });
 const mongoose = require("mongoose");
 const User = require("../models/User");
+const { getMongoUri } = require("../config/env");
 
 const seed = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+   
+    const dbURI = getMongoUri();
+    if (!dbURI) throw new Error("MongoDB URI missing. Set MONGO_URI or MONGODB_URI in your environment.");
+    
+    await mongoose.connect(dbURI);
     console.log("DB Connected ✅");
 
     const existing = await User.findOne({ username: "admin" });
@@ -17,7 +19,7 @@ const seed = async () => {
 
     await User.create({
       username: "admin",
-      password: "Admin@1234",   // ← change this after first login!
+      password: "Admin@1234",
       role: "admin",
     });
 

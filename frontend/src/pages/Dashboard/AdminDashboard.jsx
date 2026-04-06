@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Loader from "../../components/common/Loader";
 import { employeeAPI } from "../../api/employee.api";
@@ -114,9 +115,9 @@ const AdminDashboard = () => {
         </h2>
         <div className="action-card-grid">
           {quickActions.map((action) => (
-            <a 
+            <Link 
               key={action.href} 
-              href={action.href} 
+              to={action.href} 
               className="action-card"
             >
               {action.badge > 0 && (
@@ -124,7 +125,7 @@ const AdminDashboard = () => {
               )}
               <div className="action-card-icon">{action.icon}</div>
               <div className="action-card-label">{action.label}</div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

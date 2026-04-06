@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "./context/AuthContext";
 import RedesignSidebar from "./components/redesign/Sidebar";
@@ -55,14 +55,15 @@ const RedesignLayout = ({ children }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Desktop pe sidebar hamesha open rahe
   useEffect(() => {
     setSidebarOpen(viewportType === "desktop");
   }, [viewportType]);
 
-  // Mobile/Tablet pe page change hone pe sidebar band ho jaye
+  // Mobile/Tablet pe page change hone pe sidebar band
   useEffect(() => {
-    if (viewportType !== "desktop") setSidebarOpen(false);
+    if (viewportType !== "desktop") {
+      setSidebarOpen(false);
+    }
   }, [location.pathname, viewportType]);
 
   const handleMenuToggle = () => {
@@ -71,27 +72,24 @@ const RedesignLayout = ({ children }) => {
 
   return (
     <div className={`redesign-app ${sidebarOpen ? "sidebar-open" : "sidebar-closed"} viewport-${viewportType}`}>
-      {/* Header */}
       <RedesignHeader onMenuToggle={handleMenuToggle} />
-
-      {/* Sidebar */}
+      
       <RedesignSidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
         shouldCloseOnNavigate={viewportType !== "desktop"}
       />
 
-      {/* Main Content - Yeh important hai */}
       <main className="main-content">
         {children}
       </main>
 
-      {/* Bottom Tab Bar (Mobile ke liye) */}
       <RedesignBottomTabBar />
     </div>
   );
 };
 
+// Private Route Wrappers
 const AdminWrapper = ({ children }) => (
   <PrivateRoute requiredRole="admin">
     <RedesignLayout>{children}</RedesignLayout>
@@ -104,37 +102,28 @@ const EmployeeWrapper = ({ children }) => (
   </PrivateRoute>
 );
 
-// Redirect wrapper
+// Redirect if already logged in (Login page ke liye)
+// Uses <Navigate> declaratively instead of useEffect + navigate to avoid loops
 const RedirectIfAuthenticated = ({ children }) => {
   const { user, loading } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!loading && user) {
-      navigate(user.role === "admin" ? "/" : "/my-dashboard", { replace: true });
-    }
-  }, [user, loading, navigate]);
 
   if (loading) return <Loader />;
-  if (user) return null;
+  if (user) {
+    const targetPath = user.role === "admin" ? "/" : "/my-dashboard";
+    return <Navigate to={targetPath} replace />;
+  }
   return children;
 };
 
+// App Routes - no global auth guard useEffect (PrivateRoute handles redirects)
 const AppRoutes = () => {
-  const { user, loading } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!loading && !user && window.location.pathname !== "/login") {
-      navigate("/login", { replace: true });
-    }
-  }, [user, loading, navigate]);
+  const { loading } = useAuth();
 
   if (loading) return <Loader />;
 
   return (
     <Routes>
-      {/* Login route */}
+      {/* Login Route */}
       <Route
         path="/login"
         element={
@@ -144,7 +133,7 @@ const AppRoutes = () => {
         }
       />
 
-      {/* Admin routes */}
+      {/* Admin Routes */}
       <Route path="/" element={<AdminWrapper><AdminDashboard /></AdminWrapper>} />
       <Route path="/analytics" element={<AdminWrapper><AnalyticsDashboard /></AdminWrapper>} />
       <Route path="/projects" element={<AdminWrapper><Projects /></AdminWrapper>} />
@@ -164,7 +153,7 @@ const AppRoutes = () => {
       <Route path="/settings" element={<AdminWrapper><CompanySettingsPage /></AdminWrapper>} />
       <Route path="/profile" element={<AdminWrapper><Profile /></AdminWrapper>} />
 
-      {/* Employee routes */}
+      {/* Employee Routes */}
       <Route path="/my-dashboard" element={<EmployeeWrapper><MyDashboard /></EmployeeWrapper>} />
       <Route path="/my-attendance-mark" element={<EmployeeWrapper><GeoAttendance /></EmployeeWrapper>} />
       <Route path="/my-attendance" element={<EmployeeWrapper><MyAttendance /></EmployeeWrapper>} />
@@ -175,6 +164,9 @@ const AppRoutes = () => {
       <Route path="/my-dpr" element={<EmployeeWrapper><DPRPage /></EmployeeWrapper>} />
       <Route path="/my-advances" element={<EmployeeWrapper><AdvancePage /></EmployeeWrapper>} />
       <Route path="/my-profile" element={<EmployeeWrapper><EmployeeProfile /></EmployeeWrapper>} />
+
+      {/* Catch-all: redirect unknown routes to login */}
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 };

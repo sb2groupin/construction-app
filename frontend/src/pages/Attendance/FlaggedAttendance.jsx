@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import api from "../../api/axios.config";
 import Badge from "../../components/common/Badge";
 import Loader from "../../components/common/Loader";
+import { getAssetUrl } from "../../utils/url.utils";
 import toast from "react-hot-toast";
 
 const FlaggedAttendance = () => {
@@ -53,7 +54,7 @@ const FlaggedAttendance = () => {
                   <td>
                     {r.selfiePhoto ? (
                       <img
-                        src={`http://localhost:5000${r.selfiePhoto}`}
+                        src={getAssetUrl(r.selfiePhoto)}
                         alt="selfie"
                         style={{ width: "40px", height: "40px", borderRadius: "50%", objectFit: "cover", border: "2px solid var(--danger)" }}
                       />

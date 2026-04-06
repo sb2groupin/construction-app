@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../api/axios.config";
+import { getAssetUrl } from "../../utils/url.utils";
 import toast from "react-hot-toast";
 
 const GeoAttendance = () => {
@@ -191,7 +192,7 @@ const GeoAttendance = () => {
 
             {todayRecord.selfiePhoto && (
               <img
-                src={`http://localhost:5000${todayRecord.selfiePhoto}`}
+                src={getAssetUrl(todayRecord.selfiePhoto)}
                 alt="Selfie"
                 style={{ width: "120px", height: "120px", borderRadius: "50%", objectFit: "cover", border: "3px solid var(--primary)" }}
               />
@@ -342,6 +343,7 @@ const GeoAttendance = () => {
 
 // ── Check-Out Button Component ────────────────────────
 const CheckOutButton = ({ employeeId, date, onDone }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
 
   const checkout = async () => {
