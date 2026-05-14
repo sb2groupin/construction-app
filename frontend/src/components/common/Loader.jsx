@@ -1,14 +1,16 @@
+import styles from "./Loader.module.css";
+
 const Loader = ({ fullPage = true }) => {
   if (fullPage) {
     return (
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh" }}>
-        <div className="spinner" />
+      <div className={styles.fullPage}>
+        <div className={styles.spinner} />
       </div>
     );
   }
   return (
-    <div className="loader-wrap">
-      <div className="spinner" />
+    <div className={styles.loaderWrap}>
+      <div className={styles.spinner} />
     </div>
   );
 };

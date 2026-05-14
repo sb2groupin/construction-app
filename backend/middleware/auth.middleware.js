@@ -9,7 +9,6 @@ const verifyToken = (req, res, next) => {
     return sendError(res, "No token provided. Please login first.", 401);
   }
 
-  // "Bearer <token>" format handle karo
   const token = authHeader.startsWith("Bearer ")
     ? authHeader.split(" ")[1]
     : authHeader;

@@ -5,6 +5,7 @@ import { employeeAPI } from "../../api/employee.api";
 import { attendanceAPI } from "../../api/attendance.api";
 import { settingsAPI } from "../../api/settings.api";
 import { generateMonthlyReport, exportSalaryExcel, exportAttendanceExcel } from "../../utils/pdf.utils";
+import { toLocalMonthString } from "../../utils/date.utils";
 import Loader from "../../components/common/Loader";
 import toast from "react-hot-toast";
 
@@ -17,7 +18,7 @@ const Reports = () => {
   const [settings,  setSettings] = useState(null);
   const [loading,   setLoading]  = useState(false);
   const [selEmp,    setSelEmp]   = useState("");
-  const thisMonth = new Date().toISOString().slice(0, 7);
+  const thisMonth = toLocalMonthString();
   const [month, setMonth] = useState(thisMonth);
 
   useEffect(() => {
@@ -184,7 +185,7 @@ const Reports = () => {
                           <td style={{ fontSize:"12px" }}>{r.checkOutTime?new Date(r.checkOutTime).toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"}):"—"}</td>
                           <td>{r.workingHours?`${r.workingHours}h`:"—"}</td>
                           <td>{r.overtimeHours>0?<span style={{ color:"var(--primary)" }}>{r.overtimeHours}h</span>:"—"}</td>
-                          <td>{r.location?.latitude?(r.location.isValid?<span style={{ color:"var(--success)" }}>✅</span>:<span style={{ color:"var(--danger)" }}>⚠️{r.location.distanceFromSite}m</span>):"—"}</td>
+                          <td>{r.checkInLocation?(r.isValidLocation?<span style={{ color:"var(--success)" }}>✅</span>:<span style={{ color:"var(--danger)" }}>⚠️{r.distanceFromSite}m</span>):"—"}</td>
                         </tr>
                       ))}
                     </tbody>

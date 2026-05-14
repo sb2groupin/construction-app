@@ -15,6 +15,7 @@ const applyLeave = async (req, res, next) => {
     const empId = req.user.role === "employee" ? req.user.employeeId : req.body.employeeId;
     if (!empId) return sendError(res, "employeeId missing", 400);
     const emp = await Employee.findOne({ empId });
+    if (!emp) return sendError(res, "Employee not found", 404);
     const totalDays = isHalfDay ? 0.5 : calcDays(startDate, endDate);
     const leave = new Leave({ employeeId: empId, employeeName: emp?.name || "", type, startDate, endDate, totalDays, reason, isHalfDay: !!isHalfDay });
     await leave.save();
@@ -78,6 +79,9 @@ const deleteLeave = async (req, res, next) => {
   try {
     const leave = await Leave.findById(req.params.id);
     if (!leave) return sendError(res, "Leave not found", 404);
+    if (req.user.role === "employee" && leave.employeeId !== req.user.employeeId) {
+      return sendError(res, "Access denied. You can only cancel your own leave.", 403);
+    }
     if (leave.status !== "Pending") return sendError(res, "Sirf pending leave cancel ho sakti hai", 400);
     await leave.deleteOne();
     return sendSuccess(res, {}, "Leave cancelled");

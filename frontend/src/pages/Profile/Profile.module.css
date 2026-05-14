@@ -1,0 +1,189 @@
+.layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 24px;
+}
+
+.profileCard {
+  padding: 32px;
+  text-align: center;
+}
+
+.heroBlock {
+  margin-bottom: 24px;
+}
+
+.avatar {
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  overflow: hidden;
+  border: 4px solid var(--primary);
+  border-radius: 999px;
+  background: var(--primary-light);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.2);
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarInitials {
+  color: var(--primary);
+  font-size: 56px;
+  font-weight: 700;
+}
+
+.userName {
+  margin-bottom: 8px;
+  color: var(--text-primary);
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.userEmail {
+  margin-bottom: 12px;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.roleBadge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(249, 115, 22, 0.1);
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.metaSection {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.metaItem + .metaItem {
+  margin-top: 16px;
+}
+
+.metaLabel {
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.metaValue {
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.formCard {
+  padding: 32px;
+}
+
+.detailsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.detailGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detailLabel {
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.detailValue {
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.editHeading {
+  margin-bottom: 20px;
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.optionalHint {
+  margin-left: 4px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.fileInput {
+  cursor: pointer;
+}
+
+.helperText {
+  margin-top: 6px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.requiredMark {
+  margin-left: 4px;
+  color: var(--danger);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.saveButton {
+  min-width: 120px;
+}
+
+.inlineSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 479px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .profileCard,
+  .formCard {
+    padding: 20px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}

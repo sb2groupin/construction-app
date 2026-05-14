@@ -5,6 +5,7 @@ import { projectAPI } from "../../api/project.api";
 import Modal from "../../components/common/Modal";
 import Badge from "../../components/common/Badge";
 import Loader from "../../components/common/Loader";
+import { toLocalDateString } from "../../utils/date.utils";
 import toast from "react-hot-toast";
 
 const STATUS_COLOR = { Active:"success", Idle:"gray", "Under Maintenance":"warning", Retired:"danger" };
@@ -20,7 +21,7 @@ const EquipmentPage = () => {
   const [showSvc,   setShowSvc]   = useState(null);
   const [showDetail,setShowDetail]= useState(null);
   const [saving,    setSaving]    = useState(false);
-  const today = new Date().toISOString().split("T")[0];
+  const today = toLocalDateString();
 
   const [form, setForm]       = useState({ name:"", type:"JCB", registrationNo:"", projectId:"", lastServiceDate:"", nextServiceDate:"" });
   const [usageForm, setUsage] = useState({ date:today, hoursUsed:"", operatorName:"", fuelCost:"", notes:"" });

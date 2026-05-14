@@ -5,6 +5,8 @@ import { useAuth } from "../../context/AuthContext";
 import { employeeAPI } from "../../api/employee.api";
 import { authAPI } from "../../api/auth.api";
 import Loader from "../../components/common/Loader";
+import { toLocalDateString } from "../../utils/date.utils";
+import styles from "./EmployeeProfile.module.css";
 
 const EMPTY_PROFILE_FORM = {
   name: "",
@@ -26,7 +28,7 @@ const toDateInput = (value) => {
   if (!value) return "";
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "";
-  return date.toISOString().slice(0, 10);
+  return toLocalDateString(date);
 };
 
 const buildProfileForm = (employee) => ({
@@ -46,42 +48,22 @@ const buildProfileForm = (employee) => ({
 });
 
 const DocumentCard = ({ title, hint, preview, onUpload }) => (
-  <div
-    style={{
-      border: "1px solid var(--border)",
-      borderRadius: "18px",
-      padding: "16px",
-      background: "linear-gradient(180deg, #fffdf8 0%, #ffffff 100%)",
-      boxShadow: "0 8px 20px rgba(15, 23, 42, 0.04)",
-    }}
-  >
-    <div style={{ marginBottom: "12px" }}>
-      <div style={{ fontSize: "15px", fontWeight: 700, color: "var(--text-primary)" }}>{title}</div>
-      <div style={{ fontSize: "12px", color: "var(--text-secondary)", marginTop: "4px" }}>{hint}</div>
+  <div className={styles.documentCard}>
+    <div className={styles.documentHeader}>
+      <div className={styles.documentTitle}>{title}</div>
+      <div className={styles.documentHint}>{hint}</div>
     </div>
 
-    <div
-      style={{
-        minHeight: "150px",
-        borderRadius: "14px",
-        border: "1px dashed rgba(249, 115, 22, 0.3)",
-        background: "rgba(249, 115, 22, 0.04)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        overflow: "hidden",
-        marginBottom: "12px",
-      }}
-    >
+    <div className={styles.documentPreview}>
       {preview ? (
         <img
           src={preview}
           alt={title}
-          style={{ width: "100%", height: "150px", objectFit: "cover" }}
+          className={styles.documentPreviewImage}
         />
       ) : (
-        <div style={{ textAlign: "center", color: "var(--text-secondary)", fontSize: "13px" }}>
-          <div style={{ fontSize: "30px", marginBottom: "6px" }}>+</div>
+        <div className={styles.documentPlaceholder}>
+          <div className={styles.documentPlaceholderIcon}>+</div>
           <div>No document uploaded</div>
         </div>
       )}
@@ -246,7 +228,7 @@ const EmployeeProfile = () => {
     return (
       <div className="page-content">
         <div className="card">
-          <p style={{ color: "var(--text-secondary)" }}>Employee profile not found. Please contact admin.</p>
+          <p className={styles.mutedText}>Employee profile not found. Please contact admin.</p>
         </div>
       </div>
     );
@@ -254,11 +236,11 @@ const EmployeeProfile = () => {
 
   const initials = employee.name?.split(" ").map((word) => word[0]).join("").toUpperCase().slice(0, 2) || "EM";
   const salaryLabel = employee.salaryType === "monthly"
-    ? `\u20B9${(employee.monthlySalary || 0).toLocaleString("en-IN")} / month`
-    : `\u20B9${employee.dailyWage || 0} / day`;
+    ? `₹${(employee.monthlySalary || 0).toLocaleString("en-IN")} / month`
+    : `₹${employee.dailyWage || 0} / day`;
 
   return (
-    <div className="page-content employee-profile-page">
+    <div className={`page-content ${styles.profilePage}`}>
       <div className="page-header">
         <div>
           <h1 className="page-title">{t("myProfile") || "My Profile"}</h1>
@@ -269,55 +251,29 @@ const EmployeeProfile = () => {
         </button>
       </div>
 
-      <div className="employee-profile-layout">
-        <div className="employee-profile-main">
-          <div
-            className="card card-primary employee-profile-hero"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "20px",
-              flexWrap: "wrap",
-              padding: "24px",
-            }}
-          >
-            <div
-              style={{
-                width: "88px",
-                height: "88px",
-                borderRadius: "28px",
-                background: employee.photo
-                  ? "transparent"
-                  : "linear-gradient(135deg, rgba(249,115,22,0.18), rgba(251,146,60,0.38))",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                overflow: "hidden",
-                fontSize: "28px",
-                fontWeight: 800,
-                color: "var(--primary)",
-                flexShrink: 0,
-              }}
-            >
+      <div className={styles.layout}>
+        <div className={styles.mainColumn}>
+          <div className={`card card-primary ${styles.heroCard}`}>
+            <div className={styles.heroAvatar}>
               {employee.photo ? (
-                <img src={employee.photo} alt={employee.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <img src={employee.photo} alt={employee.name} className={styles.heroAvatarImage} />
               ) : (
                 initials
               )}
             </div>
 
-            <div style={{ flex: 1, minWidth: "220px" }}>
-              <div style={{ fontSize: "24px", fontWeight: 800, color: "var(--text-primary)" }}>{employee.name}</div>
-              <div style={{ fontSize: "14px", color: "var(--text-secondary)", marginTop: "6px" }}>
+            <div className={styles.heroInfo}>
+              <div className={styles.heroName}>{employee.name}</div>
+              <div className={styles.heroMeta}>
                 {employee.designation || "Employee"} {" - "} {employee.empId}
               </div>
-              <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginTop: "12px" }}>
+              <div className={styles.heroBadges}>
                 <span className="badge badge-primary">{employee.projectId?.name || "Project not assigned"}</span>
                 <span className="badge badge-warning">{salaryLabel}</span>
               </div>
             </div>
 
-            <div className="employee-profile-photo-upload" style={{ width: "220px", maxWidth: "100%" }}>
+            <div className={styles.photoUpload}>
               <label className="form-label">{t("profilePhoto") || "Profile Photo"}</label>
               <input
                 type="file"
@@ -328,15 +284,15 @@ const EmployeeProfile = () => {
             </div>
           </div>
 
-          <div className="card" style={{ padding: "24px" }}>
-            <div className="card-header" style={{ marginBottom: "20px" }}>
+          <div className={`card ${styles.sectionCard}`}>
+            <div className={styles.sectionHeader}>
               <div>
                 <h3 className="card-title">Personal Information</h3>
-                <p className="card-subtitle">Keep your profile and emergency details up to date</p>
+                <p className={styles.sectionSubtitle}>Keep your profile and emergency details up to date</p>
               </div>
             </div>
 
-            <div className="form-grid employee-personal-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px" }}>
+            <div className={`form-grid ${styles.personalGrid}`}>
               <div className="form-group">
                 <label className="form-label">{t("name") || "Name"} *</label>
                 <input className="form-control" value={form.name} onChange={(e) => handleFieldChange("name", e.target.value)} />
@@ -392,7 +348,7 @@ const EmployeeProfile = () => {
                 </select>
               </div>
 
-              <div className="form-group" style={{ gridColumn: "1 / -1" }}>
+              <div className={`form-group ${styles.fullSpan}`}>
                 <label className="form-label">{t("address") || "Address"}</label>
                 <textarea
                   className="form-control"
@@ -402,22 +358,22 @@ const EmployeeProfile = () => {
                 />
               </div>
 
-              <div className="form-group" style={{ gridColumn: "1 / -1" }}>
+              <div className={`form-group ${styles.fullSpan}`}>
                 <label className="form-label">{t("emergencyContact") || "Emergency Contact"}</label>
                 <input className="form-control" value={form.emergencyContact} onChange={(e) => handleFieldChange("emergencyContact", e.target.value)} />
               </div>
             </div>
           </div>
 
-          <div className="card" style={{ padding: "24px" }}>
-            <div className="card-header" style={{ marginBottom: "20px" }}>
+          <div className={`card ${styles.sectionCard}`}>
+            <div className={styles.sectionHeader}>
               <div>
                 <h3 className="card-title">Documents</h3>
-                <p className="card-subtitle">Upload the important identity documents you want on your profile</p>
+                <p className={styles.sectionSubtitle}>Upload the important identity documents you want on your profile</p>
               </div>
             </div>
 
-            <div className="employee-doc-grid" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px" }}>
+            <div className={styles.docGrid}>
               <DocumentCard
                 title="Aadhaar Card"
                 hint="Upload front-side photo or scan"
@@ -434,45 +390,37 @@ const EmployeeProfile = () => {
           </div>
         </div>
 
-        <div className="employee-profile-side">
-          <div className="card" style={{ padding: "24px" }}>
-            <div className="card-header" style={{ marginBottom: "16px" }}>
+        <div className={styles.sideColumn}>
+          <div className={`card ${styles.sectionCard}`}>
+            <div className={styles.sideHeader}>
               <div>
                 <h3 className="card-title">Employment Details</h3>
-                <p className="card-subtitle">Read-only job information from admin records</p>
+                <p className={styles.sectionSubtitle}>Read-only job information from admin records</p>
               </div>
             </div>
 
-            {[
-              ["Employee ID", employee.empId],
-              ["Designation", employee.designation || "Employee"],
-              ["Project", employee.projectId?.name || "Not assigned"],
-              ["Salary Type", employee.salaryType === "monthly" ? "Monthly" : "Daily Wage"],
-              ["Salary", salaryLabel],
-              ["Joining Date", employee.joinDate ? new Date(employee.joinDate).toLocaleDateString("en-IN") : "--"],
-            ].map(([label, value]) => (
-              <div
-                key={label}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  gap: "12px",
-                  padding: "12px 0",
-                  borderBottom: "1px solid rgba(229, 231, 235, 0.8)",
-                  fontSize: "14px",
-                }}
-              >
-                <span style={{ color: "var(--text-secondary)" }}>{label}</span>
-                <span style={{ fontWeight: 600, color: "var(--text-primary)", textAlign: "right" }}>{value}</span>
-              </div>
-            ))}
+            <div className={styles.infoList}>
+              {[
+                ["Employee ID", employee.empId],
+                ["Designation", employee.designation || "Employee"],
+                ["Project", employee.projectId?.name || "Not assigned"],
+                ["Salary Type", employee.salaryType === "monthly" ? "Monthly" : "Daily Wage"],
+                ["Salary", salaryLabel],
+                ["Joining Date", employee.joinDate ? new Date(employee.joinDate).toLocaleDateString("en-IN") : "--"],
+              ].map(([label, value]) => (
+                <div key={label} className={styles.infoRow}>
+                  <span className={styles.infoKey}>{label}</span>
+                  <span className={styles.infoValue}>{value}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="card" style={{ padding: "24px" }}>
-            <div className="card-header" style={{ marginBottom: "16px" }}>
+          <div className={`card ${styles.sectionCard}`}>
+            <div className={styles.sideHeader}>
               <div>
                 <h3 className="card-title">Change Password</h3>
-                <p className="card-subtitle">Use a strong password with number and special character</p>
+                <p className={styles.sectionSubtitle}>Use a strong password with number and special character</p>
               </div>
             </div>
 

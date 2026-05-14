@@ -1,5 +1,6 @@
 const DPR = require("../models/DPR");
 const { sendSuccess, sendError } = require("../utils/response.utils");
+const { toLocalDateString } = require("../utils/date.utils");
 
 const submitDPR = async (req, res, next) => {
   try {
@@ -7,7 +8,7 @@ const submitDPR = async (req, res, next) => {
     if (!projectId || !date || !workCategory || !description)
       return sendError(res, "projectId, date, workCategory, description zaroori hain", 400);
 
-    const today = new Date().toISOString().split("T")[0];
+    const today = toLocalDateString();
     if (req.user.role === "employee" && date !== today)
       return sendError(res, "Sirf aaj ki DPR submit ho sakti hai", 400);
 

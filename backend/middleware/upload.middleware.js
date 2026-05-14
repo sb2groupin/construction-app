@@ -7,6 +7,11 @@ const ensureDir = (dir) => {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 };
 
+const safeFilePart = (value, fallback = "file") => {
+  const parsed = path.parse(value || fallback);
+  return (parsed.name || fallback).replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 80);
+};
+
 // Selfie storage
 const selfieStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -16,7 +21,8 @@ const selfieStorage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const ext  = path.extname(file.originalname) || ".jpg";
-    const name = `selfie_${req.body.employeeId || "emp"}_${Date.now()}${ext}`;
+    const employeePart = safeFilePart(req.body.employeeId, "emp");
+    const name = `selfie_${employeePart}_${Date.now()}${ext}`;
     cb(null, name);
   },
 });
@@ -30,7 +36,7 @@ const dprStorage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const ext  = path.extname(file.originalname) || ".jpg";
-    const name = `dpr_${Date.now()}_${file.originalname.replace(/\s/g, "_")}${ext}`;
+    const name = `dpr_${Date.now()}_${safeFilePart(file.originalname)}${ext}`;
     cb(null, name);
   },
 });

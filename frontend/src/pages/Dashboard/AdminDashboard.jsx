@@ -7,12 +7,17 @@ import { attendanceAPI } from "../../api/attendance.api";
 import { projectAPI } from "../../api/project.api";
 import { leaveAPI } from "../../api/leave.api";
 import toast from "react-hot-toast";
+import styles from "./AdminDashboard.module.css";
 
 const AdminDashboard = () => {
   const { t } = useTranslation();
-  const [stats, setStats] = useState({ 
-    total: 0, present: 0, absent: 0, notMarked: 0, 
-    activeProjects: 0, pendingLeaves: 0 
+  const [stats, setStats] = useState({
+    total: 0,
+    present: 0,
+    absent: 0,
+    notMarked: 0,
+    activeProjects: 0,
+    pendingLeaves: 0,
   });
   const [loading, setLoading] = useState(true);
 
@@ -26,12 +31,12 @@ const AdminDashboard = () => {
         leaveAPI.getPendingCount(),
       ]);
       setStats({
-        total:          empRes.data.total || 0,
-        present:        attRes.data.present || 0,
-        absent:         attRes.data.absent || 0,
-        notMarked:      attRes.data.notMarked || 0,
+        total: empRes.data.total || 0,
+        present: attRes.data.present || 0,
+        absent: attRes.data.absent || 0,
+        notMarked: attRes.data.notMarked || 0,
         activeProjects: projRes.data.active || 0,
-        pendingLeaves:  leaveRes.data.pendingLeaves || 0,
+        pendingLeaves: leaveRes.data.pendingLeaves || 0,
       });
     } catch (err) {
       console.error(err);
@@ -49,17 +54,20 @@ const AdminDashboard = () => {
 
   if (loading) return <Loader fullPage={false} />;
 
-  const today = new Date().toLocaleDateString("en-IN", { 
-    weekday: "long", year: "numeric", month: "long", day: "numeric" 
+  const today = new Date().toLocaleDateString("en-IN", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 
   const quickActions = [
-    { icon: "🏗️", label: t("projects"),  href: "/projects",    color: "primary" },
-    { icon: "👷", label: t("employees"), href: "/employees",    color: "blue" },
-    { icon: "📅", label: t("attendance"), href: "/attendance",   color: "green" },
-    { icon: "🏖️", label: t("myLeaves"),   href: "/leaves",       color: "warning", badge: stats.pendingLeaves },
-    { icon: "💰", label: t("salary"),     href: "/salary",       color: "info" },
-    { icon: "📄", label: t("reports"),    href: "/reports",      color: "orange" },
+    { icon: "🏗️", label: t("projects"), href: "/projects" },
+    { icon: "👷", label: t("employees"), href: "/employees" },
+    { icon: "📋", label: t("attendance"), href: "/attendance" },
+    { icon: "🏖️", label: t("myLeaves"), href: "/leaves", badge: stats.pendingLeaves },
+    { icon: "💰", label: t("salary"), href: "/salary" },
+    { icon: "📄", label: t("reports"), href: "/reports" },
   ];
 
   return (
@@ -74,7 +82,6 @@ const AdminDashboard = () => {
         </button>
       </div>
 
-      {/* Key Metrics in Grid */}
       <div className="stat-cards">
         <div className="stat-card">
           <div className="stat-icon">👷</div>
@@ -108,27 +115,24 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Quick Actions Section */}
-      <div style={{ marginTop: "24px" }}>
-        <h2 style={{ fontSize: "16px", fontWeight: "600", marginBottom: "12px", color: "var(--text-primary)" }}>
-          ⚡ {t("adminDashboardSubtitle")}
-        </h2>
-        <div className="action-card-grid">
+      <section className={styles.quickActions}>
+        <h2 className={styles.sectionTitle}>⚡ {t("adminDashboardSubtitle")}</h2>
+        <div className={styles.actionGrid}>
           {quickActions.map((action) => (
-            <Link 
-              key={action.href} 
-              to={action.href} 
-              className="action-card"
+            <Link
+              key={action.href}
+              to={action.href}
+              className={styles.actionCard}
             >
               {action.badge > 0 && (
-                <div className="action-card-badge">{action.badge}</div>
+                <div className={styles.actionBadge}>{action.badge}</div>
               )}
-              <div className="action-card-icon">{action.icon}</div>
-              <div className="action-card-label">{action.label}</div>
+              <div className={styles.actionIcon}>{action.icon}</div>
+              <div className={styles.actionLabel}>{action.label}</div>
             </Link>
           ))}
         </div>
-      </div>
+      </section>
     </div>
   );
 };

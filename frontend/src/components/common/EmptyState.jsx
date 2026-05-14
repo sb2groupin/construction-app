@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import styles from './EmptyState.module.css';
 
 const EmptyState = ({ 
   icon = '📭',
@@ -15,19 +16,19 @@ const EmptyState = ({
   const defaultDescription = description || t('noDataDescription') || 'Try adjusting your filters or come back later.';
 
   return (
-    <div className="empty-state">
-      <div className="empty-state-icon">{icon}</div>
-      <h3 className="empty-state-title">{defaultTitle}</h3>
-      <p className="empty-state-description">{defaultDescription}</p>
+    <div className={styles.emptyState}>
+      <div className={styles.icon}>{icon}</div>
+      <h3 className={styles.title}>{defaultTitle}</h3>
+      <p className={styles.description}>{defaultDescription}</p>
       
       {customContent && (
-        <div className="empty-state-custom">
+        <div className={styles.customContent}>
           {customContent}
         </div>
       )}
 
       {actionLabel && onAction && (
-        <button className="btn btn-primary empty-state-action" onClick={onAction}>
+        <button className={`btn btn-primary ${styles.actionButton}`} onClick={onAction}>
           {actionLabel}
         </button>
       )}

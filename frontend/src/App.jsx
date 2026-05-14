@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation, useNavigate, Navigate } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "./context/AuthContext";
 import RedesignSidebar from "./components/redesign/Sidebar";
@@ -6,7 +6,7 @@ import RedesignHeader from "./components/redesign/Header";
 import RedesignBottomTabBar from "./components/redesign/BottomTabBar";
 import PrivateRoute from "./components/common/PrivateRoute";
 import Loader from "./components/common/Loader";
-import "./redesign.css";
+import styles from "./App.module.css";
 
 import Login from "./pages/Auth/Login";
 import AdminDashboard from "./pages/Dashboard/AdminDashboard";
@@ -23,7 +23,6 @@ import InventoryPage from "./pages/Inventory/InventoryPage";
 import ExpensesPage from "./pages/Expenses/ExpensesPage";
 import TasksPage from "./pages/Tasks/TasksPage";
 import Profile from "./pages/Profile/Profile";
-import AdminProfile from "./pages/Profile/AdminProfile";
 import EmployeeProfile from "./pages/Profile/EmployeeProfile";
 import CompanySettingsPage from "./pages/CompanySettings/CompanySettingsPage";
 import AdvancePage from "./pages/Advance/AdvancePage";
@@ -47,6 +46,11 @@ const RedesignLayout = ({ children }) => {
   const location = useLocation();
   const [viewportType, setViewportType] = useState(getViewportType);
   const [sidebarOpen, setSidebarOpen] = useState(() => getViewportType() === "desktop");
+  const viewportClassName = {
+    desktop: styles.viewportDesktop,
+    tablet: styles.viewportTablet,
+    mobile: styles.viewportMobile,
+  }[viewportType];
 
   useEffect(() => {
     const handleResize = () => setViewportType(getViewportType());
@@ -71,7 +75,14 @@ const RedesignLayout = ({ children }) => {
   };
 
   return (
-    <div className={`redesign-app ${sidebarOpen ? "sidebar-open" : "sidebar-closed"} viewport-${viewportType}`}>
+    <div
+      className={[
+        styles.app,
+        sidebarOpen ? styles.sidebarOpen : styles.sidebarClosed,
+        viewportClassName,
+      ].filter(Boolean).join(" ")}
+      data-viewport={viewportType}
+    >
       <RedesignHeader onMenuToggle={handleMenuToggle} />
       
       <RedesignSidebar
@@ -80,7 +91,7 @@ const RedesignLayout = ({ children }) => {
         shouldCloseOnNavigate={viewportType !== "desktop"}
       />
 
-      <main className="main-content">
+      <main className={styles.mainContent}>
         {children}
       </main>
 

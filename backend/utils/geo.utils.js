@@ -1,23 +1,25 @@
-// Haversine formula — do coordinates ke beech distance nikalo (meters mein)
-const getDistanceInMeters = (lat1, lon1, lat2, lon2) => {
-  const R = 6371000; // Earth radius in meters
-  const toRad = (deg) => (deg * Math.PI) / 180;
-
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
+function getDistance(lat1, lon1, lat2, lon2) {
+  const radiusMeters = 6371000;
+  const phi1 = lat1 * Math.PI / 180;
+  const phi2 = lat2 * Math.PI / 180;
+  const deltaPhi = (lat2 - lat1) * Math.PI / 180;
+  const deltaLambda = (lon2 - lon1) * Math.PI / 180;
 
   const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
-
+    Math.sin(deltaPhi / 2) * Math.sin(deltaPhi / 2) +
+    Math.cos(phi1) * Math.cos(phi2) *
+    Math.sin(deltaLambda / 2) * Math.sin(deltaLambda / 2);
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-};
 
-// Check karo employee site ke andar hai ya bahar
-const isWithinGeoFence = (empLat, empLon, siteLat, siteLon, radiusMeters) => {
-  const distance = getDistanceInMeters(empLat, empLon, siteLat, siteLon);
-  return { isValid: distance <= radiusMeters, distance: Math.round(distance) };
-};
+  return radiusMeters * c;
+}
 
-module.exports = { getDistanceInMeters, isWithinGeoFence };
+function isWithinGeoFence(userLat, userLng, siteLat, siteLng, radiusMeters = 500) {
+  const distance = getDistance(userLat, userLng, siteLat, siteLng);
+  return {
+    isValid: distance <= radiusMeters,
+    distance: Math.round(distance),
+  };
+}
+
+module.exports = { getDistance, isWithinGeoFence };

@@ -1,6 +1,7 @@
 const { createNotification } = require("./notification.controller");
 const Task = require("../models/Task");
 const { sendSuccess, sendError } = require("../utils/response.utils");
+const { toLocalDateString } = require("../utils/date.utils");
 
 const createTask = async (req, res, next) => {
   try {
@@ -26,7 +27,7 @@ const getTasks = async (req, res, next) => {
     const tasks = await Task.find(filter).sort({ priority: 1, dueDate: 1 });
 
     // Overdue flag karo
-    const today = new Date().toISOString().split("T")[0];
+    const today = toLocalDateString();
     const withFlags = tasks.map(t => ({
       ...t.toObject(),
       isOverdue: t.dueDate && t.dueDate < today && t.status !== "Completed",
@@ -38,11 +39,20 @@ const getTasks = async (req, res, next) => {
 const updateTask = async (req, res, next) => {
   try {
     const { status, title, description, priority, dueDate } = req.body;
+    const task = await Task.findById(req.params.id);
+    if (!task) return sendError(res, "Task not found", 404);
+
+    if (req.user.role === "employee" && task.assignedTo !== req.user.employeeId) {
+      return sendError(res, "Access denied. You can only update your own tasks.", 403);
+    }
+
     const updates = {};
-    if (title)       updates.title       = title;
-    if (description) updates.description = description;
-    if (priority)    updates.priority    = priority;
-    if (dueDate)     updates.dueDate     = dueDate;
+    if (req.user.role === "admin") {
+      if (title)       updates.title       = title;
+      if (description) updates.description = description;
+      if (priority)    updates.priority    = priority;
+      if (dueDate)     updates.dueDate     = dueDate;
+    }
     if (status) {
       updates.status = status;
       if (status === "Completed") {
@@ -50,9 +60,8 @@ const updateTask = async (req, res, next) => {
         if (req.file) updates.completionPhoto = `/uploads/dpr/${req.file.filename}`;
       }
     }
-    const task = await Task.findByIdAndUpdate(req.params.id, updates, { new: true });
-    if (!task) return sendError(res, "Task not found", 404);
-    return sendSuccess(res, { task }, "Task updated");
+    const updatedTask = await Task.findByIdAndUpdate(req.params.id, updates, { new: true });
+    return sendSuccess(res, { task: updatedTask }, "Task updated");
   } catch (err) { next(err); }
 };
 
@@ -65,7 +74,7 @@ const deleteTask = async (req, res, next) => {
 
 const getOverdueTasks = async (req, res, next) => {
   try {
-    const today = new Date().toISOString().split("T")[0];
+    const today = toLocalDateString();
     const tasks = await Task.find({ dueDate: { $lt: today }, status: { $ne: "Completed" } });
     return sendSuccess(res, { tasks, total: tasks.length });
   } catch (err) { next(err); }

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import LanguageSwitcher from '../common/LanguageSwitcher';
+import styles from './Header.module.css';
 
 const RedesignHeader = ({ onMenuToggle }) => {
   const { t } = useTranslation();
@@ -42,62 +43,60 @@ const RedesignHeader = ({ onMenuToggle }) => {
   };
 
   return (
-    <header className="redesign-header">
-      <div className="header-left">
-        {/* Hamburger Button - Yeh ab Header mein hai */}
+    <header className={styles.header}>
+      <div className={styles.leftSection}>
         <button
           type="button"
-          className="hamburger-btn"
+          className={styles.menuButton}
           onClick={onMenuToggle}
           aria-label="Toggle sidebar"
         >
-          <span className="hamburger-icon">{'\u2630'}</span>
+          <span className={styles.menuIcon}>{'\u2630'}</span>
         </button>
 
-        {/* Company Info */}
-        <div className="header-company-info">
+        <div className={styles.companyInfo}>
           {companyLogo ? (
             <img
               src={companyLogo}
               alt={companyName}
-              className="header-company-logo"
+              className={styles.companyLogo}
             />
           ) : (
-            <span className="header-company-icon">🏢</span>
+            <span className={styles.companyIcon}>{"\u{1F3E2}"}</span>
           )}
 
-          <div className="header-company-details">
-            <div className="header-company-name">{companyName}</div>
-            <div className="header-company-tagline">{company?.tagline || t('construction')}</div>
+          <div className={styles.companyDetails}>
+            <div className={styles.companyName}>{companyName}</div>
+            <div className={styles.companyTagline}>{company?.tagline || t('construction')}</div>
           </div>
         </div>
       </div>
 
-      <div className="header-right">
+      <div className={styles.rightSection}>
         <LanguageSwitcher />
 
-        <div className="profile-dropdown" ref={dropdownRef}>
+        <div className={styles.profileDropdown} ref={dropdownRef}>
           <button
             type="button"
-            className="profile-button"
+            className={styles.profileButton}
             onClick={() => setShowProfileDropdown(!showProfileDropdown)}
             title={user?.name || 'Profile'}
           >
-            <div className="avatar-small">
+            <div className={styles.avatarSmall}>
               {user?.avatar ? (
                 <img src={user.avatar} alt={user.name} />
               ) : (
                 getUserInitials()
               )}
             </div>
-            <span className="profile-name">{user?.name || 'User'}</span>
-            <span className="dropdown-arrow">▼</span>
+            <span className={styles.profileName}>{user?.name || 'User'}</span>
+            <span className={styles.dropdownArrow}>{"\u25BE"}</span>
           </button>
 
           {showProfileDropdown && (
-            <div className="dropdown-menu">
-              <div className="dropdown-header">
-                <div className="avatar-large">
+            <div className={styles.dropdownMenu}>
+              <div className={styles.dropdownHeader}>
+                <div className={styles.avatarLarge}>
                   {user?.avatar ? (
                     <img src={user.avatar} alt={user.name} />
                   ) : (
@@ -105,33 +104,33 @@ const RedesignHeader = ({ onMenuToggle }) => {
                   )}
                 </div>
 
-                <div className="dropdown-user-info">
-                  <div className="dropdown-name">{user?.name || 'User'}</div>
-                  <div className="dropdown-username">{user?.username}</div>
-                  <div className="dropdown-role">
+                <div className={styles.dropdownUserInfo}>
+                  <div className={styles.dropdownName}>{user?.name || 'User'}</div>
+                  <div className={styles.dropdownUsername}>{user?.username}</div>
+                  <div className={styles.dropdownRole}>
                     {user?.role === 'admin' ? t('admin') : t('employee')}
                   </div>
                 </div>
               </div>
 
-              <div className="dropdown-divider"></div>
+              <div className={styles.dropdownDivider}></div>
 
               <button
                 type="button"
-                className="dropdown-item"
+                className={styles.dropdownItem}
                 onClick={handleProfileClick}
               >
-                👤 <span>{t('myProfile')}</span>
+                {"\u{1F464}"} <span>{t('myProfile')}</span>
               </button>
 
-              <div className="dropdown-divider"></div>
+              <div className={styles.dropdownDivider}></div>
 
               <button
                 type="button"
-                className="dropdown-item dropdown-logout"
+                className={`${styles.dropdownItem} ${styles.logoutButton}`}
                 onClick={handleLogout}
               >
-                🚪 <span>{t('logout')}</span>
+                {"\u{1F6AA}"} <span>{t('logout')}</span>
               </button>
             </div>
           )}

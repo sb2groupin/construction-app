@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { employeeAPI } from "../../api/employee.api";
 import { salaryAPI } from "../../api/salary.api";
+import { settingsAPI } from "../../api/settings.api";
 import Loader from "../../components/common/Loader";
-import Badge from "../../components/common/Badge";
+import { generateSalarySlip } from "../../utils/pdf.utils";
+import { toLocalMonthString } from "../../utils/date.utils";
 import toast from "react-hot-toast";
 
-const SalaryBreakdown = ({ r, t }) => {
+const SalaryBreakdown = ({ r, t, settings }) => {
   if (!r) return null;
   const rows = [
     [t("salaryType"),    r.salaryType === "monthly" ? t("monthlyFixed") : t("dailyWage")],
@@ -67,7 +69,7 @@ const SalaryBreakdown = ({ r, t }) => {
         <span style={{ color: "var(--success)" }}>₹{r.netSalary?.toLocaleString("en-IN")}</span>
       </div>
       <div style={{ display:"flex", gap:"10px", marginTop:"16px" }}>
-        <button className="btn btn-danger" style={{ flex:1 }} onClick={async()=>{try{await generateSalarySlip(r);toast.success(t("downloadPDF"));}catch(e){toast.error(t("downloadError")+": "+e.message);}}}>
+        <button className="btn btn-danger" style={{ flex:1 }} onClick={async()=>{try{await generateSalarySlip(r, settings);toast.success(t("downloadPDF"));}catch(e){toast.error(t("downloadError")+": "+e.message);}}}>
           📄 {t("downloadSalarySlip")}
         </button>
       </div>
@@ -82,7 +84,7 @@ const Salary = () => {
   const [result,    setResult]    = useState(null);
   const [checking,  setChecking]  = useState(false);
   const [settings, setSettings] = useState(null);
-  const thisMonth = new Date().toISOString().slice(0, 7);
+  const thisMonth = toLocalMonthString();
   const [form, setForm] = useState({ employeeId: "", month: thisMonth });
 
   useEffect(() => {
@@ -90,9 +92,9 @@ const Salary = () => {
       const emps = res.data.employees || [];
       setEmployees(emps);
       if (emps.length) setForm(f => ({ ...f, employeeId: emps[0].empId }));
-    //settingsAPI.get().then(r => setSettings(r.data.settings)).catch(() => {});
     }).catch(() => toast.error(t("loadError")))
       .finally(() => setLoading(false));
+    settingsAPI.get().then(r => setSettings(r.data.settings)).catch(() => {});
   }, []);
 
   const check = async () => {
@@ -135,7 +137,7 @@ const Salary = () => {
         </button>
       </div>
 
-      {result && <SalaryBreakdown r={result} t={t} />}
+      {result && <SalaryBreakdown r={result} t={t} settings={settings} />}
     </div>
   );
 };

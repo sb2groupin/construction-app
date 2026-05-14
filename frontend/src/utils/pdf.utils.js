@@ -1,5 +1,5 @@
 // PDF Generation utilities using jsPDF
-// Usage: import { generateSalarySlip, generateDPRReport, generateMonthlyReport } from "../../utils/pdf.utils"
+// Usage: import the helpers from this module where PDF export buttons need them.
 
 const loadJsPDF = async () => {
   const { default: jsPDF } = await import("jspdf");
@@ -205,7 +205,7 @@ export const exportAttendanceExcel = (records, employeeName, month, year) => {
     r.checkInTime  ? new Date(r.checkInTime).toLocaleTimeString("en-IN")  : "",
     r.checkOutTime ? new Date(r.checkOutTime).toLocaleTimeString("en-IN") : "",
     r.workingHours || "",
-    r.location?.isValid !== false ? "Yes" : "No",
+    r.isValidLocation !== false ? "Yes" : "No",
     r.overtimeHours || 0,
   ]);
   const csvContent = [headers, ...rows].map(row => row.join(",")).join("\n");

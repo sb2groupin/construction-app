@@ -6,13 +6,18 @@ const employeeSchema = new mongoose.Schema(
     name:        { type: String, required: true, trim: true },
     phone:       { type: String, trim: true, default: null },
     email:       { type: String, trim: true, default: null },
-    photo:       { type: String, default: null },        // Cloudinary URL
+    photo:       { type: String, default: null },
+    
     // Salary
     salaryType:  { type: String, enum: ["daily","monthly"], default: "daily" },
     dailyWage:   { type: Number, default: 0 },
     monthlySalary: { type: Number, default: 0 },
-    overtimeRate:  { type: Number, default: null },     // null = use company setting
-    incentive:     { type: Number, default: 0 },        // monthly bonus
+    overtimeRate:  { type: Number, default: null },
+    incentive:     { type: Number, default: 0 },
+    
+    // ✅ NEW: Per-employee standard working hours (per day)
+    standardWorkingHours: { type: Number, default: 9 },
+    
     // Personal
     designation: { type: String, default: "Worker" },
     alternatePhone: { type: String, trim: true, default: null },
@@ -23,15 +28,18 @@ const employeeSchema = new mongoose.Schema(
     bloodGroup: { type: String, trim: true, default: null },
     maritalStatus: { type: String, trim: true, default: null },
     joinDate:    { type: Date, default: Date.now },
+    
     // Documents
     aadharPhoto: { type: String, default: null },
     panPhoto:    { type: String, default: null },
+    
     // Leave balance
     leaveBalance: {
       sick:    { type: Number, default: 12 },
       casual:  { type: Number, default: 12 },
       earned:  { type: Number, default: 15 },
     },
+    
     // Relations
     projectId:   { type: mongoose.Schema.Types.ObjectId, ref: "Project", default: null },
     isActive:    { type: Boolean, default: true },

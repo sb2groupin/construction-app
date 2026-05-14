@@ -7,6 +7,7 @@ import Loader from "../../components/common/Loader";
 import FlaggedAttendance from "./FlaggedAttendance";
 import AttendanceCalendar from "../../components/common/AttendanceCalendar";
 import { getAssetUrl } from "../../utils/url.utils";
+import { toLocalDateString } from "../../utils/date.utils";
 import toast from "react-hot-toast";
 
 const Attendance = () => {
@@ -18,7 +19,7 @@ const Attendance = () => {
   const [marking,   setMarking]   = useState(false);
   const [bulkMarking, setBulkMarking] = useState(false);
   const [calEmpId,  setCalEmpId]  = useState("");
-  const today = new Date().toISOString().split("T")[0];
+  const today = toLocalDateString();
   const [form,   setForm]    = useState({ employeeId: "", date: today, present: "true", isHalfDay: false, notes: "" });
   const [filterMonth, setFilterMonth] = useState(today.slice(0, 7));
 
@@ -170,7 +171,7 @@ const Attendance = () => {
                       ? r.isHalfDay ? <Badge type="warning">🌗 {t("halfDay")}</Badge> : <Badge type="success">{t("present")}</Badge>
                       : <Badge type="danger">{t("absent")}</Badge>}
                   </td>
-                  <td>{r.location?.latitude ? r.location.isValid ? <Badge type="success">✅</Badge> : <Badge type="danger">⚠️{r.location.distanceFromSite}m</Badge> : "—"}</td>
+                  <td>{r.checkInLocation ? r.isValidLocation ? <Badge type="success">✅</Badge> : <Badge type="danger">⚠️{r.distanceFromSite}m</Badge> : "—"}</td>
                   <td style={{ fontSize: "12px" }}>{r.checkInTime  ? new Date(r.checkInTime).toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"}) : "—"}</td>
                   <td style={{ fontSize: "12px" }}>{r.checkOutTime ? new Date(r.checkOutTime).toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"}) : "—"}</td>
                   <td style={{ fontSize: "12px" }}>{r.workingHours ? `${r.workingHours}h` : "—"}</td>

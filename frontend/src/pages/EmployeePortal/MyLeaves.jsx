@@ -4,10 +4,11 @@ import { leaveAPI } from "../../api/leave.api";
 import Badge from "../../components/common/Badge";
 import Loader from "../../components/common/Loader";
 import { useAuth } from "../../context/AuthContext";
+import { toLocalDateString } from "../../utils/date.utils";
 import toast from "react-hot-toast";
 
 const STATUS_COLOR = { Pending: "warning", Approved: "success", Rejected: "danger" };
-const today = new Date().toISOString().split("T")[0];
+const today = toLocalDateString();
 
 const MyLeaves = () => {
   const { user } = useAuth();
@@ -64,7 +65,7 @@ const MyLeaves = () => {
           <div className="form-group">
             <label className="form-label">{t('leaveType')}</label>
             <select className="form-control" value={form.type} onChange={e => setForm({ ...form, type: e.target.value })}>
-              {["Sick", "Casual", "Earned", "Other"].map(t_key => <option key={t_key}>{t(t_key === "Sick" ? 'leaveType_sick' : t_key === "Casual" ? 'leaveType_casual' : t_key === "Earned" ? 'leaveType_earned' : 'leaveType_other')}</option>)}
+              {["Sick", "Casual", "Earned", "Other"].map(t_key => <option key={t_key} value={t_key}>{t(t_key === "Sick" ? 'leaveType_sick' : t_key === "Casual" ? 'leaveType_casual' : t_key === "Earned" ? 'leaveType_earned' : 'leaveType_other')}</option>)}
             </select>
           </div>
           <div className="form-group">

@@ -4,7 +4,7 @@ const express = require("express");
 const cors = require("cors");
 
 const connectDB = require("./config/db");
-const { getFirstDefinedEnv } = require("./config/env");
+const { getFirstDefinedEnv, requireEnv } = require("./config/env");
 const { errorHandler, notFound } = require("./middleware/error.middleware");
 
 const authRoutes = require("./routes/auth.routes");
@@ -24,9 +24,6 @@ const quotationRoutes = require("./routes/quotation.routes");
 const notificationRoutes = require("./routes/notification.routes");
 const subcontractorRoutes = require("./routes/subcontractor.routes");
 const equipmentRoutes = require("./routes/equipment.routes");
-
-dns.setServers(["8.8.8.8", "8.8.4.4", "1.1.1.1"]);
-console.log("DNS servers set for MongoDB connection.");
 
 const app = express();
 
@@ -57,6 +54,8 @@ app.use(
 );
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+app.get("/api/health", (req, res) => res.json({ success: true, message: "Server running." }));
+
 app.use("/api/auth", authRoutes);
 app.use("/api/employees", employeeRoutes);
 app.use("/api/attendance", attendanceRoutes);
@@ -75,7 +74,6 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/subcontractors", subcontractorRoutes);
 app.use("/api/equipment", equipmentRoutes);
 
-app.get("/api/health", (req, res) => res.json({ success: true, message: "Server running." }));
 app.use(notFound);
 app.use(errorHandler);
 
@@ -83,6 +81,10 @@ const PORT = Number(getFirstDefinedEnv("PORT") || 5001);
 
 const startServer = async () => {
   try {
+    dns.setServers(["8.8.8.8", "8.8.4.4", "1.1.1.1"]);
+    console.log("DNS servers set for MongoDB connection.");
+
+    requireEnv("JWT_SECRET", "JWT_REFRESH_SECRET");
     await connectDB();
 
     const server = app.listen(PORT, () => console.log(`Server on port ${PORT}`));
@@ -101,4 +103,8 @@ const startServer = async () => {
   }
 };
 
-startServer();
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = { app, startServer };

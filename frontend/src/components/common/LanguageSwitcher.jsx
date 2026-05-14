@@ -1,5 +1,6 @@
 // frontend/src/components/common/LanguageSwitcher.jsx
 import { useTranslation } from 'react-i18next';
+import styles from './LanguageSwitcher.module.css';
 
 const LANGUAGE_OPTIONS = [
   { code: 'en', label: 'EN', title: 'English' },
@@ -17,13 +18,13 @@ const LanguageSwitcher = () => {
   const isActive = (lng) => currentLanguage.startsWith(lng);
 
   return (
-    <div className="language-switcher" role="group" aria-label="Language switcher">
+    <div className={styles.switcher} role="group" aria-label="Language switcher">
       {LANGUAGE_OPTIONS.map((option) => (
         <button
           key={option.code}
           type="button"
           onClick={() => changeLanguage(option.code)}
-          className={isActive(option.code) ? 'active' : ''}
+          className={[styles.option, isActive(option.code) ? styles.active : ''].filter(Boolean).join(' ')}
           aria-pressed={isActive(option.code)}
           title={option.title}
         >

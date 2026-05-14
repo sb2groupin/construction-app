@@ -1,0 +1,229 @@
+.quickGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.cardHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cardIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--primary-light);
+  font-size: 24px;
+}
+
+.cardSubtitle {
+  margin-top: 4px;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.miniStatGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.miniStatCard {
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.presentCard {
+  background: #f0fdf4;
+}
+
+.halfCard {
+  background: #fef3c7;
+}
+
+.absentCard {
+  background: #fef2f2;
+}
+
+.miniStatLabel {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.miniStatValue {
+  margin-top: 4px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.presentValue {
+  color: var(--success);
+}
+
+.halfValue {
+  color: var(--warning);
+}
+
+.absentValue {
+  color: var(--danger);
+}
+
+.fullWidthLink {
+  width: 100%;
+}
+
+.salarySummary {
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(249, 115, 22, 0.05) 100%);
+}
+
+.salarySummaryValue {
+  margin-top: 4px;
+  color: var(--primary);
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.subtleText {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.tabGroup {
+  display: flex;
+  gap: 6px;
+}
+
+.monthInput {
+  width: auto;
+}
+
+.emptyStateText {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.cellStrong {
+  font-weight: 600;
+}
+
+.cellSmall {
+  font-size: 12px;
+}
+
+.salaryContainer {
+  max-width: 600px;
+}
+
+.detailsList {
+  display: flex;
+  flex-direction: column;
+}
+
+.detailsRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.detailsKey {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.detailsValue {
+  color: var(--text-primary);
+  font-weight: 600;
+  text-align: right;
+}
+
+.earningsBox {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.boxHeading {
+  margin-bottom: 8px;
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.earnRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 12px;
+}
+
+.earnPositive {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.earnNegative {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.netSalaryBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(249, 115, 22, 0.05) 100%);
+}
+
+.netSalaryLabel {
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.netSalaryAmount {
+  color: var(--primary);
+  font-size: 24px;
+  font-weight: 700;
+}
+
+@media (max-width: 767px) {
+  .miniStatGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .tabGroup {
+    width: 100%;
+  }
+
+  .tabGroup :global(.btn) {
+    flex: 1;
+  }
+
+  .netSalaryBox {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+}

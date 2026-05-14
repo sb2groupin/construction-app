@@ -1051,9 +1051,24 @@ body {
   color: var(--primary);
 }
 
+.badge-primary {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.badge-warning {
+  background: rgba(245, 158, 11, 0.14);
+  color: var(--warning);
+}
+
 .badge-success {
   background: rgba(16, 185, 129, 0.1);
   color: var(--success);
+}
+
+.badge-danger {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
 }
 
 .badge-error {
@@ -1074,6 +1089,18 @@ body {
 
 .dot.green {
   background: var(--success);
+}
+
+.dot-warning {
+  background: var(--warning);
+}
+
+.dot-success {
+  background: var(--success);
+}
+
+.dot-danger {
+  background: var(--danger);
 }
 
 .progress-bar {
@@ -1160,7 +1187,8 @@ body {
    TABLES
    ═══════════════════════════════════════════════════════════════════════ */
 
-.table-wrapper {
+.table-wrapper,
+.table-wrap {
   overflow-x: auto;
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
@@ -1517,6 +1545,8 @@ tbody tr:hover {
 .display-block { display: block; }
 .display-flex { display: flex; }
 .display-grid { display: grid; }
+.flex { display: flex; }
+.gap-2 { gap: 8px; }
 
 .flex-center { display: flex; align-items: center; justify-content: center; }
 .flex-between { display: flex; align-items: center; justify-content: space-between; }

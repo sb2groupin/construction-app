@@ -1,29 +1,35 @@
 import { useState, useEffect } from "react";
 import { attendanceAPI } from "../../api/attendance.api";
+import { useAuth } from "../../context/AuthContext";
+import { toLocalDateString, toLocalMonthString } from "../../utils/date.utils";
 import Loader from "./Loader";
 
 const AttendanceCalendar = ({ employeeId, isReadOnly = false }) => {
+  const { user } = useAuth();
   const [records,  setRecords]  = useState([]);
   const [loading,  setLoading]  = useState(true);
   const [month,    setMonth]    = useState(() => {
-    const n = new Date();
-    return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}`;
+    return toLocalMonthString();
   });
 
   useEffect(() => {
     if (!employeeId) { setLoading(false); return; }
     const [y, m] = month.split("-");
     setLoading(true);
-    attendanceAPI.getAll({ employeeId, month: m, year: y })
+    const request = user?.role === "employee" && employeeId === user.employeeId
+      ? attendanceAPI.getMyAttendance({ month: m, year: y })
+      : attendanceAPI.getAll({ employeeId, month: m, year: y });
+
+    request
       .then(res => setRecords(res.data.attendance || []))
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [employeeId, month]);
+  }, [employeeId, month, user?.employeeId, user?.role]);
 
   const [year, mon] = month.split("-").map(Number);
   const firstDay  = new Date(year, mon - 1, 1).getDay();
   const daysInMonth = new Date(year, mon, 0).getDate();
-  const today = new Date().toISOString().split("T")[0];
+  const today = toLocalDateString();
 
   const recordMap = {};
   records.forEach(r => { recordMap[r.date] = r; });
@@ -85,7 +91,7 @@ const AttendanceCalendar = ({ employeeId, isReadOnly = false }) => {
               const r       = recordMap[dateStr];
 
               return (
-                <div key={day} title={r ? `${r.present ? (r.isHalfDay ? "Half Day" : "Present") : "Absent"}${r.location?.isValid === false ? " ⚠️ Invalid Location" : ""}` : ""}
+                <div key={day} title={r ? `${r.present ? (r.isHalfDay ? "Half Day" : "Present") : "Absent"}${r.isValidLocation === false ? " ⚠️ Invalid Location" : ""}` : ""}
                   style={{
                     textAlign: "center", padding: "6px 2px", borderRadius: "6px", cursor: "default",
                     background: style.bg, color: style.color, border: `1px solid ${style.border}`,
@@ -94,7 +100,7 @@ const AttendanceCalendar = ({ employeeId, isReadOnly = false }) => {
                   }}
                 >
                   {day}
-                  {r?.location?.isValid === false && (
+                  {r?.isValidLocation === false && (
                     <span style={{ position: "absolute", top: "1px", right: "2px", fontSize: "8px" }}>⚠️</span>
                   )}
                   {r?.selfiePhoto && (

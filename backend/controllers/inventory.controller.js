@@ -81,6 +81,7 @@ const getRequests = async (req, res, next) => {
   try {
     const { projectId, status } = req.query;
     const filter = {};
+    if (req.user.role === "employee") filter.requestedBy = req.user.employeeId;
     if (projectId) filter.projectId = projectId;
     if (status)    filter.status    = status;
     const requests = await MaterialRequest.find(filter).sort({ createdAt: -1 });

@@ -1,22 +1,23 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import api from "../../api/axios.config";
+import { attendanceAPI } from "../../api/attendance.api";
 import Badge from "../../components/common/Badge";
 import Loader from "../../components/common/Loader";
 import { getAssetUrl } from "../../utils/url.utils";
+import { toLocalMonthString } from "../../utils/date.utils";
 import toast from "react-hot-toast";
 
 const FlaggedAttendance = () => {
   const { t } = useTranslation();
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
-  const thisMonth = new Date().toISOString().slice(0, 7);
+  const thisMonth = toLocalMonthString();
   const [month, setMonth] = useState(thisMonth);
 
   useEffect(() => {
     const [year, m] = month.split("-");
     setLoading(true);
-    api.get("/attendance/flagged", { params: { month: m, year } })
+    attendanceAPI.getFlagged({ month: m, year })
       .then(res => setRecords(res.data?.flagged || []))
       .catch(() => toast.error(t("loadError")))
       .finally(() => setLoading(false));
@@ -44,10 +45,10 @@ const FlaggedAttendance = () => {
               {records.map(r => (
                 <tr key={r._id}>
                   <td>{r.date}</td>
-                  <td style={{ fontWeight: 500 }}>{r.employeeId}</td>
+                  <td style={{ fontWeight: 500 }}>{r.employeeId?.name || r.employeeId?.empId || r.employeeId}</td>
                   <td>
                     <span style={{ color: "var(--danger)", fontWeight: 600 }}>
-                      {r.location?.distanceFromSite ?? "—"}m
+                      {r.distanceFromSite ?? "—"}m
                     </span>
                     <span style={{ fontSize: "11px", color: "var(--gray-400)", display: "block" }}>site se door</span>
                   </td>

@@ -47,6 +47,28 @@ Server `http://localhost:5001` pe chalega.
 
 ---
 
+## Deployment Scope
+
+Current backend schema `single-organization` mode ke hisaab se bana hua hai.
+
+Iska reason:
+- `CompanySettings` singleton model hai, yani poore system ke liye ek hi company settings document maintain hota hai.
+- `User`, `Employee`, `Project`, `Attendance`, `Expense`, `Inventory` jaise core models me `organizationId` / `tenantId` field nahi hai.
+- Auth aur queries shared namespace me chal rahi hain, isliye ek hi database instance ko ek business/company ke liye treat kiya gaya hai.
+
+Agar ise future me market/SaaS multi-tenant product banana ho to ye changes chahiye:
+- ek separate `Organization` collection
+- har business model me `organizationId`
+- login/session/token layer me tenant context
+- har controller query me tenant filter
+- unique indexes ko tenant-aware banana, jaise `username + organizationId`
+
+Short summary:
+- Abhi ka design: `single organization / single company`
+- Future scalable direction: `multi-tenant SaaS`, lekin uske liye schema aur auth layer dono me refactor chahiye
+
+---
+
 ## API Endpoints
 
 ### Auth

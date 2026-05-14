@@ -1,7 +1,23 @@
 import axios from "axios";
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || "/api").replace(/\/$/, "");
+const BACKEND_ORIGIN = (import.meta.env.VITE_BACKEND_ORIGIN || "").replace(/\/$/, "");
+const API_BASE_URL = (
+  import.meta.env.VITE_API_BASE_URL ||
+  (BACKEND_ORIGIN ? `${BACKEND_ORIGIN}/api` : "/api")
+).replace(/\/$/, "");
 const buildApiUrl = (path) => `${API_BASE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+
+if (
+  import.meta.env.PROD &&
+  !import.meta.env.VITE_API_BASE_URL &&
+  !BACKEND_ORIGIN &&
+  typeof window !== "undefined" &&
+  !["localhost", "127.0.0.1"].includes(window.location.hostname)
+) {
+  console.warn(
+    "VITE_API_BASE_URL is not set, so the app is using relative /api requests in production."
+  );
+}
 
 const api = axios.create({
   baseURL: API_BASE_URL,

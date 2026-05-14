@@ -5,6 +5,7 @@ import { projectAPI } from "../../api/project.api";
 import Modal from "../../components/common/Modal";
 import Badge from "../../components/common/Badge";
 import Loader from "../../components/common/Loader";
+import { toLocalDateString } from "../../utils/date.utils";
 import toast from "react-hot-toast";
 
 const STATUS_COLOR = { Active:"success", Completed:"primary", "On Hold":"warning", Terminated:"danger" };
@@ -21,7 +22,7 @@ const SubcontractorPage = () => {
   const [showDetail,setShowDetail]=useState(null);
   const [saving,    setSaving]   = useState(false);
   const [form,      setForm]     = useState(EMPTY);
-  const [payForm,   setPayForm]  = useState({ amount:"", date: new Date().toISOString().split("T")[0], note:"" });
+  const [payForm,   setPayForm]  = useState({ amount:"", date: toLocalDateString(), note:"" });
   const [filterProject, setFilterProject] = useState("");
 
   useEffect(() => {
@@ -56,7 +57,7 @@ const SubcontractorPage = () => {
     try {
       await subcontractorAPI.addPayment(showPay._id, payForm);
       toast.success(t("paymentRecorded"));
-      setShowPay(null); setPayForm({ amount:"", date:new Date().toISOString().split("T")[0], note:"" });
+      setShowPay(null); setPayForm({ amount:"", date:toLocalDateString(), note:"" });
       load();
     } catch (err) { toast.error(err.message||t("saveError")); }
     finally { setSaving(false); }
@@ -130,7 +131,7 @@ const SubcontractorPage = () => {
                     <td>
                       <div style={{ display:"flex", gap:"4px", flexWrap:"wrap" }}>
                         <button className="btn btn-outline btn-sm" onClick={() => setShowDetail(s)}>👁️</button>
-                        <button className="btn btn-success btn-sm" onClick={() => { setShowPay(s); setPayForm({ amount:"", date:new Date().toISOString().split("T")[0], note:"" }); }}>💵 Pay</button>
+                        <button className="btn btn-success btn-sm" onClick={() => { setShowPay(s); setPayForm({ amount:"", date:toLocalDateString(), note:"" }); }}>💵 Pay</button>
                         <button className="btn btn-danger btn-sm" onClick={() => handleRemove(s._id, s.name)}>🗑️</button>
                       </div>
                     </td>

@@ -7,6 +7,7 @@ import Badge from "../../components/common/Badge";
 import Loader from "../../components/common/Loader";
 import Modal from "../../components/common/Modal";
 import { getAssetUrl } from "../../utils/url.utils";
+import { toLocalMonthString } from "../../utils/date.utils";
 import toast from "react-hot-toast";
 
 const WEATHER_EMOJI = { Sunny:"☀️", Cloudy:"🌥️", Rain:"🌧️", "Extreme Heat":"🔥", Foggy:"🌫️" };
@@ -23,7 +24,7 @@ const DPRPage = () => {
   const [comment,  setComment]  = useState("");
   const [saving,   setSaving]   = useState(false);
   const [selectedProject, setSelectedProject] = useState("");
-  const thisMonth = new Date().toISOString().slice(0, 7);
+  const thisMonth = toLocalMonthString();
   const [filterMonth, setFilterMonth] = useState(thisMonth);
 
   const fileRef = useRef();

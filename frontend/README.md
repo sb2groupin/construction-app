@@ -10,7 +10,23 @@ npm run dev
 
 App `http://localhost:3000` pe chalegi.
 
-> Backend port 5000 pe chalna chahiye — Vite proxy handle karega.
+> Backend port 5001 pe chalna chahiye — Vite proxy handle karega.
+
+## Production Env
+
+Frontend agar backend se alag host par deploy ho raha hai, to frontend env me ye set karo:
+
+```bash
+VITE_BACKEND_ORIGIN=https://your-backend.onrender.com
+```
+
+Optional:
+
+```bash
+VITE_API_BASE_URL=https://your-backend.onrender.com/api
+```
+
+`VITE_API_BASE_URL` na do to app automatically `VITE_BACKEND_ORIGIN/api` use karegi.
 
 ## Folder Structure
 ```

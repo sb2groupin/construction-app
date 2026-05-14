@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { toLocalDateString } = require("../utils/date.utils");
 
 const advanceSchema = new mongoose.Schema(
   {
@@ -6,7 +7,7 @@ const advanceSchema = new mongoose.Schema(
     employeeName:  { type: String, default: null },
     amount:        { type: Number, required: true, min: 1 },
     reason:        { type: String, default: null },
-    requestDate:   { type: String, default: () => new Date().toISOString().split("T")[0] },
+    requestDate:   { type: String, default: () => toLocalDateString() },
     status:        { type: String, enum: ["Pending","Approved","Rejected"], default: "Pending" },
     adminNote:     { type: String, default: null },
     // Repayment tracking

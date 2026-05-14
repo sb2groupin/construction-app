@@ -17,8 +17,16 @@ const getFirstDefinedEnv = (...keys) => {
 
 const getMongoUri = () => getFirstDefinedEnv("MONGODB_URI", "MONGO_URI");
 
+const requireEnv = (...keys) => {
+  const missing = keys.filter((key) => !getFirstDefinedEnv(key));
+  if (missing.length) {
+    throw new Error(`Missing required environment variable(s): ${missing.join(", ")}`);
+  }
+};
+
 module.exports = {
   envPath,
   getFirstDefinedEnv,
   getMongoUri,
+  requireEnv,
 };

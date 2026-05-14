@@ -8,15 +8,11 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     server: {
+      host: true,
       port: 3000,
       proxy: {
         "/api": { target: backendTarget, changeOrigin: true },
         "/uploads": { target: backendTarget, changeOrigin: true },
-      },
-      hmr: {
-        protocol: "ws",
-        host: "localhost",
-        port: 3000,
       },
     },
     // Copy public folder (manifest, sw.js, icons)

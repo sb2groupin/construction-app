@@ -27,6 +27,10 @@ const leaveSchema = new mongoose.Schema(
       type: Number,
       default: 1,
     },
+    isHalfDay: {
+      type: Boolean,
+      default: false,
+    },
     reason: {
       type: String,
       required: [true, "Reason zaroori hai"],

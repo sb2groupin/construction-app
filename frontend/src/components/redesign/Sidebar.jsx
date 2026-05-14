@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
+import styles from './Sidebar.module.css';
 
 const getAdminNavigation = (t) => ({
   main: [
@@ -97,50 +98,51 @@ const Sidebar = ({
 
   return (
     <>
-      {/* Overlay for mobile/tablet */}
       {open && shouldCloseOnNavigate && (
-        <div className="sidebar-overlay" onClick={onClose} />
+        <div className={styles.overlay} onClick={onClose} />
       )}
 
-      <aside className={`sidebar ${open ? 'open' : 'closed'}`}>
-        <nav className="sidebar-nav">
-          {/* Main Dashboard Link */}
+      <aside className={`${styles.sidebar} ${open ? styles.open : styles.closed}`}>
+        <nav className={styles.nav}>
           {navigation.main.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
-              className={({ isActive }) => `nav-link ${isActive ? 'nav-link-active' : ''}`}
+              className={({ isActive }) => [styles.navLink, isActive ? styles.navLinkActive : ''].filter(Boolean).join(' ')}
               onClick={handleNavClick}
             >
-              <span className="nav-icon">{item.icon}</span>
+              <span className={styles.navIcon}>{item.icon}</span>
               <span>{item.label}</span>
             </NavLink>
           ))}
 
-          {/* Categorized Navigation */}
           {Object.entries(navigation)
             .filter(([key]) => key !== 'main')
             .map(([category, items]) => (
-              <div key={category} className="nav-category">
+              <div key={category} className={styles.navCategory}>
                 <button
                   type="button"
-                  className="nav-category-header"
+                  className={styles.categoryHeader}
                   onClick={() => toggleCategory(category)}
                 >
                   <span>{categoryLabels[category]}</span>
-                  <span className={`chevron ${expandedCategories[category] ? 'open' : ''}`}>›</span>
+                  <span className={`${styles.chevron} ${expandedCategories[category] ? styles.chevronOpen : ''}`}>›</span>
                 </button>
 
                 {expandedCategories[category] && (
-                  <div className="nav-category-items">
+                  <div className={styles.categoryItems}>
                     {items.map((item) => (
                       <NavLink
                         key={item.path}
                         to={item.path}
-                        className={({ isActive }) => `nav-link nav-link-sub ${isActive ? 'nav-link-active' : ''}`}
+                        className={({ isActive }) => [
+                          styles.navLink,
+                          styles.navLinkSub,
+                          isActive ? styles.navLinkActive : '',
+                        ].filter(Boolean).join(' ')}
                         onClick={handleNavClick}
                       >
-                        <span className="nav-icon">{item.icon}</span>
+                        <span className={styles.navIcon}>{item.icon}</span>
                         <span>{item.label}</span>
                       </NavLink>
                     ))}
